@@ -1,0 +1,687 @@
+%国語プリント作成のマクロ
+%%%%%% 教科書漢文本文書き用時間明け環境 prkanbunenv %%%%%%%
+  \newcounter{rybaselinestretch}    %行間を入れるカウンタ。この数字を\setcounterで操作
+  \setcounter{rybaselinestretch}{2}
+  \newenvironment{prkanbunenv}{
+  \def\bousensepstretch{3.5}
+  \begin{kanshi}
+  \kansiokuri
+  \kanjiskip=1zw 
+  \renewcommand{\baselinestretch}{\therybaselinestretch}\selectfont
+  \let\aiubou=\ryaiubou
+  \let\Aiubou=\ryAiubou
+  \let\alphbou=\ryalphbou
+  \let\Alphbou=\ryAlphbou
+  \let\sujibou=\rysujibou
+  \noindent
+  }{
+  \end{kanshi}
+  }
+%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%plus .125zw minus 0.03125zw
+%%%% prkanbunenvを使った教科書漢文表示用命令 %%%%%%%%%%%
+  % \rykyokasyokanbun{漢文を書く}
+  \def\rykyokasyokanbun#1{
+  \begin{prkanbunenv}
+  {\Large #1}
+  \end{prkanbunenv}
+  }
+%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%括弧なしの空白
+\def\rybox#1{{\hbox to #1zw{\hfil}}}
+%%%%%%%%% 生徒用プリント空白を作る命令 %%%%%%%%%%%%%
+
+  \makeatletter
+  \def\rykanbunmigityubox#1{%
+  \@tfor\member:=#1\do{{\scriptsize 　}}
+  }
+  \makeatother
+%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%% forteacherでrykanbunmigityuboxに代入 %%%%%%%%%%%
+  \def\ryboxteacher#1{\scriptsize #1}
+%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%括弧付きの空白
+\def\ryboxkakko#1{[\sujitoi{\hbox to #1zw{\hfil}}]}
+
+
+
+%%%%%%%%%%%%%%%%%%%% テスト解答用の答え匪 %%%%%%%%%%%%%%%%%%%%%%%% 
+\def\rytestanswerbox#1{%
+#1
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% 括弧にいれる文字の空白を空ける。 %%%%%%%%
+  %  \rytoibox{空欄の中身}
+  \makeatletter
+  \def\rytoibox#1{%
+  \@tfor\member:=#1\do{{\huge 　}}
+  }
+  %%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 教師用空欄の答え %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \def\ryanswerbox#1{%
+  {\huge #1}
+  }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%% 芳泉用の空欄 %%%%%%%%%%%
+  \def\hosenakibox{%
+    \@ifnextchar[{\@hosenakibox}{\@hosenakibox[\huge]}}
+    \def\@hosenakibox[#1]#2{
+      \@tfor\member:=#2\do{{#1\hskip1zh}}
+  }
+  \def\hosenakiboxkakko{
+    \@ifnextchar[{\@hosenakiboxkakko}{\@hosenakiboxkakko[\huge]}}
+    \def\@hosenakiboxkakko[#1]#2{
+      　\hskip-1zh\sujitoi(\hosenakibox[#1]{#2})
+    }
+  \def\hosenanswerbox{%
+    \@ifnextchar[{\@hosenanswerbox}{\@hosenanswerbox[\huge]}}
+    \def\@hosenanswerbox[#1]#2{
+      {#1\expandafter#2}
+    }
+  \def\hosenanswerboxscriptsize#1{%
+  {\scriptsize #1}
+  }
+%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%% テストの解答欄用の空白括弧　%%%%%%%%%%%
+  \def\rytestkaitoubox#1{%
+  \@tfor\member:=#1\do{　}
+  }
+  \makeatother
+%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% toiboxに括弧をつける。現代語訳の括弧用 %%%%%%%%%%%%%%
+  %  \rytoiboxkakko{隠したい文字内容}
+  %  n[　　　]　と表示される。
+
+  \def\rytoiboxkakko#1{%
+  \raise-5pt\hbox{\sujitoi[1]}(\rytoibox{#1})
+  }
+%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+  %toiboxに括弧をつける。章段末の括弧用
+  \def\ryquestionkakko#1{%
+  \Aiutoi[0][\rytoibox{#1}]
+  }
+
+  %和歌の現代語訳用空欄
+  \def\rytoiboxwaka#1{%
+  \@tfor\member:=#1\do{\normalsize 　}
+  }
+
+
+%%%%%%%%%% プリント環境prenv（上段 printlength文字分,下段gosyakulength分）%%%%%%%%%
+  %プリント環境　
+  \newcounter{printlength}
+  \setcounter{printlength}{32}
+  \newcounter{gosyakulength}
+  \setcounter{gosyakulength}{8}
+  \newenvironment{prenv}{
+  \tabcolsep=1zw
+  \begin{table}[th]
+  \begin{tabular}{p{\theprintlength zw}|p{\thegosyakulength zw}}
+  }
+  {
+  \end{tabular}
+  \end{table}
+  }
+%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%% プリント環境用のコマンド \ryprint %%%%%%%%%%%%%%%%
+% 用例
+  % \ryprint
+  % ---本文---
+  % ;
+  % ---下段(語釈など)---
+  % ;;
+  %
+  \def\ryprint#1;#2;;{
+  \begin{prenv}
+  \hskip-2zw \parbox[t]{\theprintlength zw}{#1} & \parbox[t]{\thegosyakulength zw}{#2} \\
+  \end{prenv}
+  }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%% 漢文プリント作成コマンド %%%%%%%%
+  %    \rykanbunprint
+  %    ---漢文を書く---
+  %    :
+  %    書き下し文や現代語訳を書く。
+  %    :
+  %    (\parboxの中で書いているので改行ＯＫ)
+
+  \def\rykanbunprint#1:#2:{
+  \begin{prkanbunenv}
+  {\Large #1}
+  \end{prkanbunenv}
+  \begin{quote}
+  #2
+  \end{quote}}
+%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%% 語釈作成用コマンド %%%%%%%%%%%%
+  %    \rygosyaku
+  %    語釈を書く:
+  %    意味等を書く:
+  %
+
+  \def\rygosyaku#1:#2:{
+  {\bf #1}\\{\scriptsize #2}\\
+  }
+%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%% 語釈内で空欄にするコマンド %%%%%%%%%
+  % \rygosyakubox{空欄の答え}
+  \makeatletter
+  \def\rygosyakubox#1{%
+  \@tfor\member:=#1\do{{\scriptsize 　}}
+  }
+  \makeatother
+%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%% 答えを表示するコマンド %%%%%%%%
+  % forteacher環境で答えが表示される
+  % letでrygosyakuboxに代入している
+
+  \def\rygosyakuboxteacher#1{
+  {\bf {\scriptsize #1}}
+  }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%% プリント何枚目かのカウンタ %%%%%%%%%%%%%%%%%%%%%%
+  \newcounter{pnum}
+  \setcounter{pnum}{1}
+  \def\printnum{\addtocounter{pnum}{1}　\kanji\thepnum}
+%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% 最初の二行を表示するコマンド %%%%%%%%%%%%%%%%%%
+  %  \firstcolumn{n年m科}{授業の名前(例・古典)}{教材名}{n年m組}
+  %
+  %
+  %
+  \def\rykyokashomaru#1{{\scriptsize 教{\large \kern-.8zw\raise-1pt\hbox{$\bigcirc$}}}\rensuji{#1}ページ〜}
+  \def\firstcolumn#1#2#3{
+    \thispagestyle{myheadings}
+    \markright{#1\printnum 枚目　\rykyokashomaru{#2}}
+    \noindent\mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて左から（　　）列目\\[1zw]
+  }
+  \def\teacherfirstcolumn#1#2#3{
+    \thispagestyle{myheadings}
+    \markright{#1\printnum 枚目　\rykyokashomaru{#2}(教師用)}
+    \mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて左から（　　）列目\\[1zw]
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%% テスト問題用紙用の最初の二行 %%%%%%%%%%%%%%%%%%%%%%%%%%
+  %  \testfst{考査の時期}{何年何科}{教科名}
+  \def\testfst#1#2#3{
+  #1　#2　#3\\
+  }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%% テスト解答用紙用の最初の二行 %%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \testkaitouyoushifst{考査の時期}{何年何科}{教科名}{何年何組}
+  \def\testkaitouyoushifst#1#2#3#4{\renewcommand\arraystretch{2} \large
+  #1　#2　#3\\
+  %\mbox{}\hfill#4\\
+  \mbox{}\hfill
+  \begin{tabular}{|c|c|c|c|c|}\hline
+    #4学年&　　組&　　番&氏名&　\hskip20zh　\\\hline
+  \end{tabular}\\
+  }
+%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% 問n を表示するコマンド %%%%%%%%%%%%%%%%%%%%
+%  用例
+%  問題用紙用のコマンド
+%  \rytesttoi で　問一 などと表示される。
+\newcounter{toi}
+\setcounter{toi}{0}
+\def\rytesttoi{\addtocounter{toi}{1}{\bf 問\kanji\thetoi}　}
+%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 解答欄用の問nコマンド %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \rytestques \rytestquescr
+  % 解答欄用のコマンド
+  % \rytestques と書くことで 問一 のように連番で 問n が書ける。
+  % \rytestquescr と書くことで①　のように連番で番号が書ける。
+  \newcounter{testques}
+  \setcounter{testques}{0}
+  \def\rytestques{\addtocounter{testques}{1}{\scriptsize 問\kanji\thetestques}}
+
+  \newcounter{testquescr}
+  \setcounter{testquescr}{0}
+  \def\rytestquescr{\addtocounter{testquescr}{1}{\normalsize \ajMaru{\thetestquescr}}}
+
+  \newcounter{testqueskakko}
+  \setcounter{testqueskakko}{0}
+  \def\rytestqueskakko{\addtocounter{testqueskakko}{1}{\normalsize (\rensuji{\thetestqueskakko})}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%% [傍線部(n)について ]を表示するコマンド %%%%%%%%%%%%%%%
+% otfパッケージ依存
+
+\newcounter{bousenbu}
+\setcounter{bousenbu}{0}
+\def\rysujiboutoi{\addtocounter{bousenbu}{1}傍線部\ajMaru{\thebousenbu}について、}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%% 傍線部#1について　を表示スルコマンド %%%%%%%%%%%%%%
+  % 例\rybobu{ア}
+  % 傍線部アやAなどの時につかう
+
+  \def\rybobu#1{傍線部#1について、}
+%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%% 数字で傍線を引く（テスト用）%%%%%%%%%%%%%%%%
+%  
+%  用例
+%
+%  \sujibou{この部分に線がひかれて数字が表示される}
+
+\def\sujibou#1{%
+\sujitoi\sayubosen{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+%%%%%%%%%%%%%%%% カタカナで傍線を引く（テスト用）%%%%%%%%%%%%%%%%
+  %  \Aiubou{この部分に線がひかれてカタカナが表示される}
+  \def\Aiubou#1{
+  \Aiutoi[0]\sayubosen{#1}
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%% ひらがなで傍線を引く（テスト用）%%%%%%%%%%%%%%%%
+  %  \aiubou{この部分に線がひかれてひらがなが表示される}
+  \def\aiubou#1{
+  \aiutoi[0]\sayubosen{#1}
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%% アルファベットで傍線を引く（テスト用）%%%%%%%%%%%%
+  %  \alphbou{この部分に線がひかれてアルファベットが表示される}
+  \def\alphbou#1{
+  \raise1pt\hbox{\eijitoi[0]}\sayubosen{#1}
+  }
+  \def\Alphbou#1{
+  \Eijitoi[0]\sayubosen{#1}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%% rykyokasyo環境内でsujitoi,alphtoi,aiutoiの位置を調整 %%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \def\rysayubosen#1{
+  \sayubosen{#1}
+  }
+  %\rysayubosenの拡張。0.5zw幅調整
+  \def\rrysayubosen#1{
+  \hskip.5zw\sayubosen{#1}
+  }
+  \def\rysujibou#1{%
+  \raise0pt\hbox{\sujitoi[1]}\hskip0pt\sayubosen{#1}
+  }
+  %rysujibouの拡張、幅調整0.5zw
+  \def\rrysujibou#1{%
+  \hskip.5zw\rysujibou{#1}
+  }
+  \def\ryAlphbou#1{%
+  \hskip1zw\vbox to 27pt{\Eijitoi[0]}\hskip-1zw\hskip1zw\sayubosen{#1\hskip0.5zw}
+  }
+  \def\ryalphbou#1{%
+  \hskip1zw\vbox to 27pt{\eijitoi[0]}\hskip-1zw\hskip1zw\sayubosen{#1\hskip0.5zw}
+  }
+  \def\ryAiubou#1{%
+  \hskip1zw\vbox to 27pt{\Aiutoi[0]}\hskip-1zw\hskip1zw\sayubosen{#1\hskip0.5zw}
+  }
+  \def\ryaiubou#1{%
+  \hskip1zw\vbox to 27pt{\aiutoi[0]}\hskip-1zw\hskip1zw\sayubosen{#1\hskip0.5zw}
+  }
+
+%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%% rytalph %%%%%
+  %   縦書き用のアルファベットコマンド
+  %   用例
+  %
+  %   \rytalph{アルファベット一字}
+  %
+  %
+  %   アルファベットを90度回転させただけ
+  %   graphicsパッケージ依存
+
+  \def\rytalph#1{
+  \rotatebox[origin=c]{90}{#1}
+  }
+%%%%%%% end %%%%%%%
+
+%%%%% 最も適切なものを次の選択肢の中から選んで、符号で答えなさい。 %%%%%
+  \def\erabe{
+  最も適切なものを次の中から選んで、符号で答えなさい。 
+  }
+%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% テストなどの際にカウンタをリセットするコマンド %%%%%%
+%
+%  newpageしたときに使う
+  \def\ryResetCount{
+    \setcounter{toi}{0}
+    \setcounter{bousenbu}{0}
+    \setcounter{sujitoi}{0}
+    \setcounter{eijitoi}{0}
+    \setcounter{Eijitoi}{0}
+    \setcounter{aiutoi}{0}
+    \setcounter{Aiutoi}{0}
+    \setcounter{testques}{0}
+    \setcounter{testquescr}{0}
+    \setcounter{testqueskakko}{0}
+    \setcounter{pnum}{1}
+    \setcounter{mondainum}{0}
+    \setcounter{ajsuji}{0}
+  }
+%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% テスト解答用紙環境 %%%%%%%%%%%%%%%%%%%%%%%%
+  % \begin{rykaitouyousi}
+  % \begin{tabular}[t]{|*{3}{l|}}\hline
+  % &&\\
+  % \end{tabular}
+  %   テスト用の解答欄の行の高さ、tabcolsepの設定
+  %arraystretch 2倍
+  %tabcolsep 2pt
+  \newenvironment{rykaitouyousi}{
+  \renewcommand\arraystretch{4}
+  \tabcolsep=1pt
+  \scriptsize
+  \noindent
+  }
+  {\addtocounter{ryts}{\therydsum}\label{rytestsum}\ryresetdaimonscore}
+%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%
+
+
+%章段末の問題用のtabular環境
+  \newenvironment{ryquest}{
+  \begin{table}[th]
+  \begin{tabular}{lp{40zw}}
+  }
+  {
+  \end{tabular}
+  \end{table}
+}
+%%章段末の問題の番号
+  \newcounter{mondainum}
+  \setcounter{mondainum}{0}
+  \def\mondainum{\addtocounter{mondainum}{1}問\kanji\themondainum}
+%章段末の問題を作成するマクロ
+  \def\questions#1#2#3{%
+  \mondainum&#1\\
+  答え&#2\\
+  解説&#3\\
+  &\\
+}
+%%%%%%%%%%%%%%% 漢文本文プリントの中に問を作成するコマンド %%%%%%%%%%%%%
+  %  用例
+  %  \begin{description}
+  %  \rykanbunquestion{問題}{答え}{解答}
+  %  \end{description}
+
+  \def\rykanbunquestion#1#2#3{
+  \kanbunokuri
+  \item[\mondainum] #1
+  \item[答] #2
+  \item[解] #3
+  }
+%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% 意・書・訳に丸をつける。漢文の語釈用 %%%%%%%%%%%%%%%%%%%%%%
+  %  \rymaruImi,\rymaruYaku,\rymaruKakikudashi
+  \def\rymaruKakikudashi#1{{\scriptsize 書{\large \kern-.8zw\raise1pt\hbox{$\bigcirc$}}\rygosyakubox{#1}}}
+  \def\rymaruImi#1{{\scriptsize 意{\large \kern-.75zw\raise1pt\hbox{$\bigcirc$}}\rygosyakubox{#1}}}
+  \def\rymaruYaku#1{{\scriptsize 訳{\large \kern-.8zw\raise0.8pt\hbox{$\bigcirc$}}\rygosyakubox{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% 置字・助字・韻字の印。漢文用。 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \ryokiji,\ryjoji,\ryinji
+  % 用例 \kundoku{}{}{}{}<\ryokiji>
+  \def\ryokiji{\raise-1zw\hbox{\hskip-3pt{\scriptsize 置{\large \kern-.8zw\raise0.8pt\hbox{$\bigcirc$}}}}}
+  \def\ryjoji{\raise-1zw\hbox{\hskip-3pt{\scriptsize 助{\large \kern-.8zw\raise0.8pt\hbox{$\bigcirc$}}}}}
+  \def\ryinji{\raise-1zw\hbox{\hskip-3pt{\scriptsize 韻{\large \kern-.8zw\raise0.8pt\hbox{$\bigcirc$}}}}}
+%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%% 漢文の句法などの語釈 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % \rykanbungosyaku
+  \def\rykanbungosyaku#1#2#3#4{
+  {\scriptsize \fbox{#1}}
+  \hskip1zw
+  #2\\
+  \rymaruKakikudashi{#3}\\
+  \rymaruImi{#4}\\
+  }
+
+%%%%%%%%%%%% 漢文の右に注釈などを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %  用例  \kundoku{}{\rykanbunmigityu{注釈}ふりがな}{}{}
+  %  用例  \kundoku{}{}{}{} でふりがなの部分に書く。
+  \def\rykanbunmigityu#1{
+  \migishift{\raise2zw\hbox{\scriptsize #1}}\hskip-1zw
+  }
+%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%% 漢文の右に生徒に問いたいことなどを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %  rykanbunmigityuとrykanbunmigityuboxを一緒にしただけ
+  %  用例  \kundoku{}{\rrykanbunmigityu{内容}ふりがな}{}{}
+  %  用例  \kundoku{}{}{}{} でふりがなの部分に書く。
+  \def\rrykanbunmigityubox#1{
+  \expandafter\rykanbunmigityu{\expandafter\rykanbunmigityubox{#1}}
+  }
+%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%         右注を2行に分ける命令       %%%%%%%%%%%%%
+  \newcounter{rymigityucnt}
+  \setcounter{rymigityucnt}{0}
+  \makeatletter
+  \def\rrykanbunmigityu#1#2{
+  \@tfor\member:=#1\do{\addtocounter{rymigityucnt}{1}}
+  \hskip-1zw\rykanbunmigityu{\raise1zw\hbox{#1}\hskip-\expandafter\therymigityucnt zw#2}
+  \setcounter{rymigityucnt}{0}
+  }
+  \makeatother
+%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%% 2行に渡る右注の括弧 %%%%%%%%%%%%%%%%%%%%%%%%%
+%  用例：\rrrykanbunmigityubox{1行目}{2行目}
+  \def\rrrykanbunmigityubox#1#2{
+  \rrykanbunmigityu{\expandafter\rykanbunmigityubox{#1}}{\expandafter\rykanbunmigityubox{#2}}}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%% 読みを書きなさい。訓点をつけなさい。 %%%%%%%%%%%%%%%%%%%%%%%%%
+  \def\ryyomiwokakinasai{
+  読みかたを{\bf 現代仮名遣いで送り仮名も含めて}ひらがなで書きなさい。\\
+  }
+  \def\rykuntenwotukeyo{
+  という訓読に従って、訓点(返り点と送り仮名)をつけなさい。\\
+  }
+  \def\rykakikudasinasai{
+  書き下し文にしなさい。\\
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%% 五十音を自動で出力してもらうためのコマンド %%%%%%%%%%%%%%%%
+    \makeatletter
+    \def\ryalphabetsentakusi#1{\@ryalphabetsentakusi{#1}}
+    \def\@ryalphabetsentakusi#1{%
+    \ifcase#1\or a \or b \or c \or d \or e \or f \or g \or h \or i \or j \or k \or l 
+      \or m \or n \or o \or p \or q \or r \or s \or t \or u \or v \or w \or x \or y \or z \else\@ctrerr\fi
+    }
+    \def\ryAlphabetsentakusi#1{\@ryAlphabetsentakusi{#1}}
+    \def\@ryAlphabetsentakusi#1{%
+    \ifcase#1\or A \or B \or C \or D \or E \or F \or G \or H \or I \or J \or K \or L 
+      \or M \or N \or O \or P \or Q \or R \or S \or T \or U \or V \or W \or X \or Y \or Z \else\@ctrerr\fi
+    }
+    \makeatother
+    \def\ryHs#1{\ifcase#1
+      \or あ \or い \or う \or え \or お \or
+      か \or き \or く \or け \or こ \or
+      さ \or し \or す \or せ \or そ \or
+      た \or ち \or つ \or て \or と \or
+      な \or に \or ぬ \or ね \or の \or
+      は \or ひ \or ふ \or へ \or ほ \or
+      ま \or み \or む \or め \or も \or
+      や \or ゆ \or よ \or 
+      わ \or を \or ん \fi
+    }
+    \def\ryKs#1{\ifcase#1
+      \or ア \or イ \or ウ \or エ \or オ \or 
+      カ \or キ \or ク \or ケ \or コ \or 
+      サ \or シ \or ス \or セ \or ソ \or 
+      タ \or チ \or ツ \or テ \or ト \or 
+      ナ \or ニ \or ヌ \or ネ \or ノ \or 
+      ハ \or ヒ \or フ \or ヘ \or ホ \or 
+      マ \or ミ \or ム \or メ \or モ \or 
+      ヤ \or ユ \or ヨ \or 
+    ワ \or ヲ \or ン \fi
+    }
+    \newcounter{ryHsentakusi}
+    \setcounter{ryHsentakusi}{0}
+    \def\ryHiraganasentakusi{\addtocounter{ryHsentakusi}{1}\ryHs{\theryHsentakusi}}
+    \newcounter{ryKsentakusi}
+    \setcounter{ryKsentakusi}{0}
+    \def\ryKatakanasentakusi{\addtocounter{ryKsentakusi}{1}\ryKs{\theryKsentakusi}}
+    \newcounter{ryasentakusi}
+    \setcounter{ryasentakusi}{0}
+    \def\ryalphsentakusi{\addtocounter{ryasentakusi}{1}\rytalph{\ryalphabetsentakusi{\theryasentakusi}}}
+    \newcounter{ryAsentakusi}
+    \setcounter{ryAsentakusi}{0}
+    \def\ryAlphsentakusi{\addtocounter{ryAsentakusi}{1}\rytalph{\ryAlphabetsentakusi{\theryAsentakusi}}}
+    \newcounter{ajsuji}
+    \setcounter{ajsuji}{0}
+    \def\ryajsuji{\addtocounter{ajsuji}{1}\ajMaru{\theajsuji}}
+
+  %%%%%%%%%% 選択肢のカウントリセット %%%%%%%%%%%%%%%%%%%%%
+    \def\rysentakusireset{
+    \setcounter{ryKsentakusi}{0}
+    \setcounter{ryHsentakusi}{0}
+    \setcounter{ryasentakusi}{0}
+    \setcounter{ryAsentakusi}{0}
+    \setcounter{ajsuji}{0}
+    }
+%%%%%%%%%%% end %%%%%%%%%%%%%
+
+%%%%%%%%%%%%% 大問とテスト全体の合計点格納のカウンター %%%%%%%%%%%%%%
+  \newcounter{ryts}
+  \setcounter{ryts}{0}
+  \def\rytestsum{
+  \scriptsize \hfill 合計点数{\normalsize \rensuji{\theryts} }点\setcounter{ryts}{0}
+  }
+
+  \newcounter{rydsum}
+  \setcounter{rydsum}{0}
+  \def\rydaimongoukeiten{{\scriptsize 計\rensuji{\therydsum}点}}
+  \def\ryresetdaimonscore{\setcounter{rydsum}{0}}
+%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% 配点表示のマクロ %%%%%%%%%%%%%
+%  テスト用。配点を表示
+%  用例 \haiten{n}
+  \def\haiten#1{\scriptsize \rensuji{#1}\addtocounter{rydsum}{#1}}
+%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%  漢詩の割書用マクロ %%%%%%%%%%%%%%%%%%%%%%%%%
+%  漢詩の対訳とかに使う使う
+%  用例 \rykansiwarigaki{漢詩の訳とか}
+  \def\rykansiwarigaki#1{%
+  \hskip2zh
+  \kanjiskip=0zh %%%%% 字間を0に
+  \let\warigakisize=\scriptsize %%%%割書サイズを変更 
+  \twarigaki{#1}
+  }
+%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ %%%%% %教師用プリント環境 答えがある%%%%%%%%%%
+  \newenvironment{forteacher}{
+  \let\rytoibox=\ryanswerbox
+  \let\ryshiika=\ryshiikaanswer
+  \let\rykanbunmigityubox=\ryboxteacher
+  \let\rygosyakubox=\rygosyakuboxteacher
+  \let\rytestkaitoubox=\rytestanswerbox
+  \let\hosenakibox=\hosenanswerbox
+  }{}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%  設問用空欄 %%%%%%%%%%%%%%%%%%%%%%%
+  \def\rykuuran#1#2{
+    \fbox{　\hskip#1zh\rytalph{#2}\hskip#1zh　}
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 行数を出すマクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \newcounter{gyou}
+  \setcounter{gyou}{0}
+  \def\gyou{\addtocounter{gyou}{1}\rytalph{\thegyou}}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 問題文マクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \def\sanyousuji{{\bf 算用数字}で書きなさい(算用数字で書いてない場合は不正解とする)。}
+  \def\kakinuki{本文から書きぬきなさい。}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 問題nを出力するマクロとリセットするマクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \newcounter{testmondainum}
+  \setcounter{testmondainum}{0}
+  \def\testmondainum{\addtocounter{testmondainum}{1}{\bf 問題\kanji\thetestmondainum}\hskip1zh}
+  \def\testmondainumreset{\setcounter{testmondainum}{0}}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 解答用紙のページの初めに書くマクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \def\kaitouyousipagebegin{
+    \ryResetCount
+    \testmondainumreset
+    \newpage
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% 解答用紙の問題nを出力するマクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \def\testkaitoumondai#1{
+    \ryResetCount
+    \par
+    \noindent
+    {\normalsize \testmondainum }
+    \\
+    %\noindent
+    #1
+    \\
+    \rydaimongoukeiten
+  }
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
