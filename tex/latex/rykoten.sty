@@ -685,3 +685,12 @@
     \rydaimongoukeiten
   }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% hosen空欄補充マクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \newenvironment{ryanswer}{
+  \let\hosenakibox=\hosenanswerbox
+  \let\hosenakiboxscriptsize=\hosenanswerboxscriptsize
+  \let\firstcolumn=\teacherfirstcolumn
+  \let\rytoibox=\ryanswerbox
+  }{}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
