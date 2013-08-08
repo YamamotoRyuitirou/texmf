@@ -406,6 +406,7 @@
     \setcounter{pnum}{1}
     \setcounter{mondainum}{0}
     \setcounter{ajsuji}{0}
+    \setcounter{kdi}{0}
   }
 %%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -697,14 +698,20 @@
 
 %%%%%%%%%% プリント用の目標と課題を書くマクロ %%%%%%%%%%%
   \def\pmokuhyou#1{\fbox{目標}---#1}
-  \def\pkadai#1{\fbox{課題}---#1}
+  \newcounter{kdi}
+  \setcounter{kdi}{0}
+  \def\pkadai#1{\addtocounter{kdi}{1}\fbox{課題\kanji\thekdi}---#1}
+  %\def\pkadai#1{\fbox{課題}---#1}
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%% 繰り返し構文 %%%%%%%%%%%
-\def\ryfor#1#2#3{
-  \newcount\TempCntA
-    \TempCntA=0
-    \loop #1 \advance\TempCntA by#2
-    \ifnum\TempCntA<#3 \repeat
+\def\ryfor#1#2#3#4{
+  \newcount\ij
+  \ij=#1
+  \newcount\tmpry
+  \tmpry=#3
+  \advance\tmpry by1
+  \loop #4 \advance\ij by#2
+  \ifnum\ij<\tmpry \repeat
 }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
