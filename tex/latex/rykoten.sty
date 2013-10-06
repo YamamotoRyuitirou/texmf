@@ -68,16 +68,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%% 芳泉用の空欄 %%%%%%%%%%%
+%ただの空白の出力
+% 使用例： \hosenakibox[\huge]{くうらん}
   \def\hosenakibox{%
     \@ifnextchar[{\@hosenakibox}{\@hosenakibox[\huge]}}
     \def\@hosenakibox[#1]#2{
       \@tfor\member:=#2\do{{#1\hskip1zh}}
   }
+%括弧つきの空欄補充用マクロ
+% 使用例： \hosenakiboxkakko[\huge]{くうらん}
   \def\hosenakiboxkakko{
     \@ifnextchar[{\@hosenakiboxkakko}{\@hosenakiboxkakko[\huge]}}
-    \def\@hosenakiboxkakko[#1]#2{
-      　\hskip-1zh\sujitoi(\hosenakibox[#1]{#2})
-    }
+  \def\@hosenakiboxkakko[#1]#2{
+    　\hskip-1zh\sujitoi(\hosenakibox[#1]{#2})
+  }
   \def\hosenanswerbox{%
     \@ifnextchar[{\@hosenanswerbox}{\@hosenanswerbox[\huge]}}
     \def\@hosenanswerbox[#1]#2{
