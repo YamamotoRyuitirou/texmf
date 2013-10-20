@@ -80,7 +80,7 @@
   \def\hosenakiboxkakko{
     \@ifnextchar[{\@hosenakiboxkakko}{\@hosenakiboxkakko[\huge]}}
   \def\@hosenakiboxkakko[#1]#2{
-    　\hskip-1zh\sujitoi(\hosenakibox[#1]{#2})
+    　\hskip-1zh\raisebox{-5pt}{\sujitoi}(\hosenakibox[#1]{#2})
   }
   \def\hosenanswerbox{%
     \@ifnextchar[{\@hosenanswerbox}{\@hosenanswerbox[\huge]}}
@@ -350,7 +350,7 @@
   \hskip.5zw\sayubosen{#1}
   }
   \def\rysujibou#1{%
-  \raise0pt\hbox{\sujitoi[1]}\hskip0pt\sayubosen{#1}
+  \raise-3pt\hbox{\sujitoi[1]}\hskip0pt\sayubosen{#1}
   }
   %rysujibouの拡張、幅調整0.5zw
   \def\rrysujibou#1{%
@@ -420,6 +420,7 @@
   % \begin{tabular}[t]{|*{3}{l|}}\hline
   % &&\\
   % \end{tabular}
+  % \end{rykaitouyousi}
   %   テスト用の解答欄の行の高さ、tabcolsepの設定
   %arraystretch 2倍
   %tabcolsep 2pt
@@ -679,6 +680,7 @@
 
 %%%%%%%%%%%%%%%%% 解答用紙の問題nを出力するマクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \def\testkaitoumondai#1{
+    \begin{rykaitouyousi}
     \ryResetCount
     \par
     \noindent
@@ -688,6 +690,7 @@
     #1
     \\
     \rydaimongoukeiten
+    \end{rykaitouyousi}
   }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
 
