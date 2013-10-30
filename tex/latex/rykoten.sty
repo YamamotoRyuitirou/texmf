@@ -217,7 +217,7 @@
   \def\rykyokashomaru#1{{\scriptsize 教{\large \kern-.8zw\raise-0.5pt\hbox{$\bigcirc$}}}\rensuji{#1}ページ〜}
   \def\firstcolumn#1#2#3{
     \thispagestyle{myheadings}
-    \markright{#1\printnum 枚目　\rykyokashomaru{#2}}
+    \markright{#1\hskip1zw\rykyokashomaru{#2}　\printnum 枚目}
     \noindent\mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて右から（　　）列目\\[1zw]
   }
   \def\teacherfirstcolumn#1#2#3{
