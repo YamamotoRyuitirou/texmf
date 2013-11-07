@@ -32,14 +32,14 @@
 %%%%%%%%% 生徒用プリント空白を作る命令 %%%%%%%%%%%%%
 
   \makeatletter
-  \def\rykanbunmigityubox#1{%
+  \def\rykanamigityubox#1{%
   \@tfor\member:=#1\do{{\scriptsize 　}}
   }
   \makeatother
 %%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%% forteacherでrykanbunmigityuboxに代入 %%%%%%%%%%%
+%%%%%%%%%%%%%%%% forteacherでrykanamigityuboxに代入 %%%%%%%%%%%
   \def\ryboxteacher#1{\scriptsize #1}
 %%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -80,7 +80,7 @@
   \def\hosenakiboxkakko{
     \@ifnextchar[{\@hosenakiboxkakko}{\@hosenakiboxkakko[\huge]}}
   \def\@hosenakiboxkakko[#1]#2{
-    　\hskip-1zh\raisebox{-5pt}{\sujitoi}(\hosenakibox[#1]{#2})
+    　\hskip-1zh\raisebox{-3pt}{\sujitoi[1]}\hskip2pt(\hosenakibox[#1]{#2})
   }
   \def\hosenanswerbox{%
     \@ifnextchar[{\@hosenanswerbox}{\@hosenanswerbox[\huge]}}
@@ -218,12 +218,12 @@
   \def\firstcolumn#1#2#3{
     \thispagestyle{myheadings}
     \markright{#1\hskip1zw\rykyokashomaru{#2}　\printnum 枚目}
-    \noindent\mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて右から（　　）列目\\[1zw]
+    \noindent\mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて右から（　　）列目\\
   }
   \def\teacherfirstcolumn#1#2#3{
     \thispagestyle{myheadings}
     \markright{#1\printnum 枚目　\rykyokashomaru{#2}(教師用)}
-    \mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて右から（　　）列目\\[1zw]
+    \mbox{}\kanji#3年(　　)組（　　）番　氏名(\rybox{12})　\hfill 黒板を向いて右から（　　）列目\\
   }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -411,6 +411,7 @@
     \setcounter{mondainum}{0}
     \setcounter{ajsuji}{0}
     \setcounter{kdi}{0}
+    \setcounter{rygyou}{0}
   }
 %%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -495,20 +496,28 @@
   \rymaruImi{#4}\\
   }
 
-%%%%%%%%%%%% 漢文の右に注釈などを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %  用例  \kundoku{}{\rykanbunmigityu{注釈}ふりがな}{}{}
+%%%%%%%%%%%% 漢文の左に注釈などを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %  用例  \kundoku{}{\rykanasatyu{注釈}ふりがな}{}{}
   %  用例  \kundoku{}{}{}{} でふりがなの部分に書く。
-  \def\rykanbunmigityu#1{
-  \migishift{\raise2zw\hbox{\scriptsize #1}}\hskip-1zw
+  \def\rykanahidarityu#1{
+  \migishift{\raise-15pt\hbox{\scriptsize #1}}\hskip-1zw
+  }
+%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%% 漢文の右に注釈などを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %  用例  \kundoku{}{\rykanamigityu{注釈}ふりがな}{}{}
+  %  用例  \kundoku{}{}{}{} でふりがなの部分に書く。
+  \def\rykanamigityu#1{
+  \migishift{\raise5pt\hbox{\scriptsize #1}}\hskip-1zw
   }
 %%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%% 漢文の右に生徒に問いたいことなどを書く命令 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %  rykanbunmigityuとrykanbunmigityuboxを一緒にしただけ
-  %  用例  \kundoku{}{\rrykanbunmigityu{内容}ふりがな}{}{}
+  %  rykanamigityuとrykanamigityuboxを一緒にしただけ
+  %  用例  \kundoku{}{\rrykanamigityu{内容}ふりがな}{}{}
   %  用例  \kundoku{}{}{}{} でふりがなの部分に書く。
-  \def\rrykanbunmigityubox#1{
-  \expandafter\rykanbunmigityu{\expandafter\rykanbunmigityubox{#1}}
+  \def\rrykanamigityubox#1{
+  \expandafter\rykanamigityu{\expandafter\rykanamigityubox{#1}}
   }
 %%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -517,18 +526,18 @@
   \newcounter{rymigityucnt}
   \setcounter{rymigityucnt}{0}
   \makeatletter
-  \def\rrykanbunmigityu#1#2{
+  \def\rrykanamigityu#1#2{
   \@tfor\member:=#1\do{\addtocounter{rymigityucnt}{1}}
-  \hskip-1zw\rykanbunmigityu{\raise1zw\hbox{#1}\hskip-\expandafter\therymigityucnt zw#2}
+  \hskip-1zw\rykanamigityu{\raise1zw\hbox{#1}\hskip-\expandafter\therymigityucnt zw#2}
   \setcounter{rymigityucnt}{0}
   }
   \makeatother
 %%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%% 2行に渡る右注の括弧 %%%%%%%%%%%%%%%%%%%%%%%%%
-%  用例：\rrrykanbunmigityubox{1行目}{2行目}
-  \def\rrrykanbunmigityubox#1#2{
-  \rrykanbunmigityu{\expandafter\rykanbunmigityubox{#1}}{\expandafter\rykanbunmigityubox{#2}}}
+%  用例：\rrrykanamigityubox{1行目}{2行目}
+  \def\rrrykanamigityubox#1#2{
+  \rrykanamigityu{\expandafter\rykanamigityubox{#1}}{\expandafter\rykanamigityubox{#2}}}
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%% 読みを書きなさい。訓点をつけなさい。 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -639,7 +648,7 @@
   \newenvironment{forteacher}{
   \let\rytoibox=\ryanswerbox
   \let\ryshiika=\ryshiikaanswer
-  \let\rykanbunmigityubox=\ryboxteacher
+  \let\rykanamigityubox=\ryboxteacher
   \let\rygosyakubox=\rygosyakuboxteacher
   \let\rytestkaitoubox=\rytestanswerbox
   \let\hosenakibox=\hosenanswerbox
@@ -722,3 +731,9 @@
   \ifnum\ij<\tmpry \repeat
 }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%% furikanji命令に空白を+  %%%%%%%%%%%
+  \def\ryfurikanji#1#2#3{
+  \furikanji{#1}{#2\hskip1zh}{#3}
+  }
+%%%%%%%%%% end %%%%%%%%%%%
