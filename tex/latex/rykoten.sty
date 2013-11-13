@@ -1,13 +1,13 @@
 %国語プリント作成のマクロ
 %%%%%% 教科書漢文本文書き用時間明け環境 prkanbunenv %%%%%%%
-  \newcounter{rybaselinestretch}    %行間を入れるカウンタ。この数字を\setcounterで操作
-  \setcounter{rybaselinestretch}{2}
+  %\newcounter{rybaselinestretch}    %行間を入れるカウンタ。この数字を\setcounterで操作
+  %\setcounter{rybaselinestretch}{1.5}
   \newenvironment{prkanbunenv}{
   \def\bousensepstretch{3.5}
   \begin{kanshi}
   \kansiokuri
   \kanjiskip=1zw 
-  \renewcommand{\baselinestretch}{\therybaselinestretch}\selectfont
+  \renewcommand{\baselinestretch}{1.5}\selectfont
   \let\aiubou=\ryaiubou
   \let\Aiubou=\ryAiubou
   \let\alphbou=\ryalphbou
@@ -411,7 +411,7 @@
     \setcounter{mondainum}{0}
     \setcounter{ajsuji}{0}
     \setcounter{kdi}{0}
-    \setcounter{rygyou}{0}
+    %\setcounter{rygyou}{0}
   }
 %%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -734,6 +734,6 @@
 
 %%%%%%%%%% furikanji命令に空白を+  %%%%%%%%%%%
   \def\ryfurikanji#1#2#3{
-  \furikanji{#1}{#2\hskip1zh}{#3}
+  \furikanji{#1}{#2}{#3}
   }
 %%%%%%%%%% end %%%%%%%%%%%
