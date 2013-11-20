@@ -652,6 +652,7 @@
   \let\rygosyakubox=\rygosyakuboxteacher
   \let\rytestkaitoubox=\rytestanswerbox
   \let\hosenakibox=\hosenanswerbox
+  \let\hosenkuranbox=\hosenkurananswerbox
   }{}
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
 
@@ -703,14 +704,6 @@
   }
 %%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%% hosen空欄補充マクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \newenvironment{ryanswer}{
-  \let\hosenakibox=\hosenanswerbox
-  \let\hosenakiboxscriptsize=\hosenanswerboxscriptsize
-  \let\firstcolumn=\teacherfirstcolumn
-  \let\rytoibox=\ryanswerbox
-  }{}
-%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%% プリント用の目標と課題を書くマクロ %%%%%%%%%%%
   \def\pmokuhyou#1{\fbox{目標}---#1}
@@ -737,3 +730,34 @@
   \furikanji{#1}{#2}{#3}
   }
 %%%%%%%%%% end %%%%%%%%%%%
+
+%%%%%%%%%%%%%%% \hosenkuranbox命令 ( hskipではなく　で出力 ) %%%%%%%%%%%%%%%%
+  % \hosenkuranbox[\huge]{*****}
+  \makeatletter
+    \def\hosenkuranbox{%
+      \@ifnextchar[{\@hosenkuranbox}{\@hosenkuranbox[\huge]}}
+      \def\@hosenkuranbox[#1]#2{%
+        \@tfor\member:=#2\do{{#1 　}}
+    }
+  \makeatother
+%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%% \hosenkuranbox命令の答え ( hskipではなく　で出力 ) %%%%%%%%%%%%%%%%
+  \makeatletter
+    \def\hosenkurananswerbox{%
+      \@ifnextchar[{\@hosenkurananswerbox}{\@hosenkurananswerbox[\huge]}}
+      \def\@hosenkurananswerbox[#1]#2{
+        {#1\expandafter#2}
+      }
+  \makeatother
+%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% hosen空欄補充マクロ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \newenvironment{ryanswer}{
+  \let\hosenakibox=\hosenanswerbox
+  \let\hosenakiboxscriptsize=\hosenanswerboxscriptsize
+  \let\firstcolumn=\teacherfirstcolumn
+  \let\rytoibox=\ryanswerbox
+  \let\hosenkuranbox=\hosenkurananswerbox
+  }{}
+%%%%%%%%%%%%%%%%%%%%%%% end %%%%%%%%%%%%%%%%%%%%%%
